@@ -15,6 +15,7 @@ const PORT_REDIS = process.env.PORT_REDIS;
 //   port: PORT_REDIS,
 //   host: process.env.REDIS_URL,
 // });
+console.log(process.env.REDIS_URL);
 const client = createClient(process.env.REDIS_URL);
 
 const app = express();
@@ -27,7 +28,8 @@ app.use(cors());
 const server = http.createServer(app);
 const io = socket(server, { cors: { origin: "*" } });
 
-io.adapter(redis({ port: PORT_REDIS, host: "localhost" }));
+// io.adapter(redis({ port: PORT_REDIS, host: "localhost" }));
+io.adapter(redis(process.env.REDIS_URL));
 // io.set("store", new socket.RedisStore());
 
 io.on("connection", (sock) => {
