@@ -11,7 +11,10 @@ import { createBanpickPhase } from "./banpick";
 
 const PORT = process.env.PORT;
 const PORT_REDIS = process.env.PORT_REDIS;
-const client = createClient({ port: PORT_REDIS, host: "localhost" });
+const client = createClient({
+  port: PORT_REDIS,
+  // host: "localhost",
+});
 
 const app = express();
 app.set("port", PORT);
