@@ -129,3 +129,7 @@ app.post("/link-info", (req, res) => {
   console.log("-  Red Team :", req.body.redName);
   console.log("");
 });
+
+app.get("/check", (req, res) => {
+  res.send("check test done!");
+});
