@@ -13,7 +13,7 @@ const PORT = process.env.PORT;
 const PORT_REDIS = process.env.PORT_REDIS;
 const client = createClient({
   port: PORT_REDIS,
-  // host: "localhost",
+  host: process.env.REDIS_URL,
 });
 
 const app = express();
