@@ -40,14 +40,14 @@ io.on("connection", (sock) => {
     console.log(`[${sock.id}] socket disconnected`);
   });
 
-  sock.on("btn", (code) => {
-    console.log("btn clicked.");
-    client.hgetall(code, (err, data) => {
-      if (err) throw err;
-      console.log("find!", data[1]);
-      sock.emit("broadcast", data);
-    });
-  });
+  // sock.on("btn", (code) => {
+  //   console.log("btn clicked.");
+  //   client.hgetall(code, (err, data) => {
+  //     if (err) throw err;
+  //     console.log("find!", data[1]);
+  //     sock.emit("broadcast", data);
+  //   });
+  // });
 
   sock.on("gamecode", (gamecode) => {
     client.hgetall(gamecode, (err, data) => {
@@ -59,6 +59,37 @@ io.on("connection", (sock) => {
       sock.gamecode = gamecode;
       sock.join(gamecode);
       sock.emit("banpickPhase", data);
+    });
+  });
+
+  sock.on("ready", ({ team }) => {
+    client.hgetall(sock.gamecode, (err, data) => {
+      if (err) console.log(err);
+
+      if (team === "blue") {
+        // 블루팀 ready
+        client.hset(sock.gamecode, "isBlueReady", "true");
+
+        // 레드팀이 ready이면 startTime 갱신
+        if (data.isRedReady === "true") {
+          client.hset(sock.gamecode, "startTime", `${Date.now()}`);
+        }
+      } else if (team === "red") {
+        // 블루팀 ready
+        client.hset(sock.gamecode, "isRedReady", "true");
+
+        // 레드팀이 ready이면 startTime 갱신
+        if (data.isBlueReady === "true") {
+          client.hset(sock.gamecode, "startTime", `${Date.now()}`);
+        }
+      }
+    });
+
+    client.hgetall(sock.gamecode, (err, data) => {
+      if (err) throw err;
+
+      // 정보 변경 브로드캐스팅
+      io.in(sock.gamecode).emit("banpickPhase", data);
     });
   });
 

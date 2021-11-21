@@ -1,4 +1,6 @@
 const banpickPhase = {
+  isBlueReady: "false",
+  isRedReady: "false",
   phase: "1",
   startTime: "",
   blueName: "",
